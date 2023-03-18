@@ -1,12 +1,11 @@
+import IRequestOptions from '@/src/interfaces/IRequestOptions';
+
 interface ICreateUserRequest {
   data: {
     email: string;
     password: string;
   };
-  options?: {
-    onSuccess?: () => void;
-    onError?: () => void;
-  };
+  options?: IRequestOptions;
 }
 
 export default ICreateUserRequest;

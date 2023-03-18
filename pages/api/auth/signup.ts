@@ -1,5 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { connectMongoDB, insertDocument } from '@/src/helpers/mongodb';
+import {
+  connectMongoDB,
+  findDocument,
+  insertDocument,
+} from '@/src/helpers/mongodb';
 import { hashPassword } from '@/src/helpers/auth';
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -19,6 +23,16 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     const client = await connectMongoDB();
 
+    const existingUser = await findDocument(client, 'users', {
+      email,
+    });
+
+    if (existingUser) {
+      res.status(422).json({ message: 'User already exists!' });
+      await client.close();
+      return;
+    }
+
     const hashedPassword = await hashPassword(password);
 
     const result = await insertDocument(client, 'users', {
@@ -29,6 +43,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     res
       .status(201)
       .json({ message: 'User created', userId: result.insertedId });
+
+    await client.close();
   }
 }
 export default handler;

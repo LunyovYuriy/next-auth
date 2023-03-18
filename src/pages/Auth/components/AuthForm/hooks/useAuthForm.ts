@@ -15,7 +15,7 @@ function useAuthForm() {
     setPassword('');
   };
 
-  const handleSubmit = (event: FormEvent, authMode: TAuthMode) => {
+  const handleSubmit = async (event: FormEvent, authMode: TAuthMode) => {
     event.preventDefault();
 
     if (authMode === 'sign-in') {
@@ -28,7 +28,7 @@ function useAuthForm() {
         },
         options: {
           onSuccess: () => clearForm(),
-          onError: () => toast.error(DEFAULT_ERROR_MESSAGE),
+          onError: (error) => toast.error(error?.data?.message),
         },
       });
     }

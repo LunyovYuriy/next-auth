@@ -1,3 +1,4 @@
+import IRequestError from '@/src/interfaces/IRequestError';
 const mutationRequest = (method: string, url: string, body: {}) =>
   fetch(url, {
     method,
@@ -6,23 +7,38 @@ const mutationRequest = (method: string, url: string, body: {}) =>
       'Content-Type': 'application/json',
     },
   })
-    .then((response) => {
+    .then(async (response) => {
       if (response.ok) {
         return response.json();
       }
-      throw new Error(`${response.status} - ${response?.statusText}`);
+
+      const errorResponse = await response.json();
+      const error: IRequestError = {
+        status: response?.status,
+        statusText: response?.statusText,
+        data: errorResponse,
+      };
+
+      throw error;
     })
     .then((data) => data);
 
 const apiRequest = {
   get(url: string) {
     return fetch(url)
-      .then((response) => {
+      .then(async (response) => {
         if (response.ok) {
           return response.json();
         }
 
-        throw new Error(`${response.status} - ${response?.statusText}`);
+        const errorResponse = await response.json();
+        const error: IRequestError = {
+          status: response?.status,
+          statusText: response?.statusText,
+          data: errorResponse,
+        };
+
+        throw error;
       })
       .then((data) => data);
   },

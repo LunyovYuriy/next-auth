@@ -19,7 +19,19 @@ export const insertDocument = async (
   return result;
 };
 
-export const getAllDocuments = async (
+export const findDocument = async (
+  client: MongoClient,
+  collection: string,
+  filter: {} = {}
+) => {
+  const db = client.db(process.env.MONGODB_DATABASE);
+
+  const document = await db.collection(collection).findOne(filter);
+
+  return document;
+};
+
+export const findAllDocuments = async (
   client: MongoClient,
   collection: string,
   filter: {} = {},
