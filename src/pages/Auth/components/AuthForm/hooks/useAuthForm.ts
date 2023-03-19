@@ -1,7 +1,7 @@
 import { FormEvent, useState } from 'react';
-import useCreateUser from '@/src/hooks/api/useCreateUser/useCreateUser';
+import { signIn } from 'next-auth/react';
 import { toast } from 'react-toastify';
-import { DEFAULT_ERROR_MESSAGE } from '@/src/constants/general';
+import useCreateUser from '@/src/hooks/api/useCreateUser/useCreateUser';
 import { TAuthMode } from '@/src/types/TAuthMode';
 
 function useAuthForm() {
@@ -19,9 +19,16 @@ function useAuthForm() {
     event.preventDefault();
 
     if (authMode === 'sign-in') {
-      //   login user
+      const result = await signIn('credentials', {
+        redirect: false,
+        email,
+        password,
+      });
+      if (result.error) {
+        toast.error(result.error);
+      }
     } else {
-      createUserRequest({
+      await createUserRequest({
         data: {
           email,
           password,

@@ -1,9 +1,7 @@
-import AuthForm from "@/src/pages/Auth/components/AuthForm/AuthForm";
+import AuthForm from '@/src/pages/Auth/components/AuthForm/AuthForm';
 
 function AuthView() {
-  return (
-    <AuthForm />
-  );
+  return <AuthForm />;
 }
 
 export default AuthView;

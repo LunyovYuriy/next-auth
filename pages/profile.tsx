@@ -1,7 +1,7 @@
+import ProfileView from '@/src/pages/Profile/ProfileView';
+
 function Profile() {
-  return (
-    <div></div>
-  );
+  return <ProfileView />;
 }
 
 export default Profile;
