@@ -1,10 +1,12 @@
 import { FormEvent, useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { toast } from 'react-toastify';
+import { useRouter } from 'next/router';
 import useCreateUser from '@/src/hooks/api/useCreateUser/useCreateUser';
 import { TAuthMode } from '@/src/types/TAuthMode';
 
 function useAuthForm() {
+  const router = useRouter();
   const { request: createUserRequest, isLoading } = useCreateUser();
 
   const [email, setEmail] = useState<string>('');
@@ -26,6 +28,8 @@ function useAuthForm() {
       });
       if (result.error) {
         toast.error(result.error);
+      } else {
+        router.replace('/profile');
       }
     } else {
       await createUserRequest({
