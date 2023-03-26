@@ -1,4 +1,4 @@
-import { InsertOneResult, MongoClient } from 'mongodb';
+import { InsertOneResult, MongoClient, UpdateResult } from 'mongodb';
 
 export const connectMongoDB = async (): Promise<MongoClient> => {
   const client = await MongoClient.connect(
@@ -15,6 +15,20 @@ export const insertDocument = async (
 ): Promise<InsertOneResult<Document>> => {
   const db = client.db(process.env.MONGODB_DATABASE);
   const result = await db.collection(collection).insertOne(document);
+
+  return result;
+};
+
+export const updateDocument = async (
+  client: MongoClient,
+  collection: string,
+  filter: {} = {},
+  updateOptions: {} = {}
+): Promise<UpdateResult> => {
+  const db = client.db(process.env.MONGODB_DATABASE);
+  const result = await db
+    .collection(collection)
+    .updateOne(filter, updateOptions);
 
   return result;
 };

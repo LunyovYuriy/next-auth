@@ -11,6 +11,7 @@ function useAuthForm() {
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [signInLoading, setSignInLoading] = useState<boolean>(false);
 
   const clearForm = () => {
     setEmail('');
@@ -21,14 +22,17 @@ function useAuthForm() {
     event.preventDefault();
 
     if (authMode === 'sign-in') {
+      setSignInLoading(true);
       const result = await signIn('credentials', {
         redirect: false,
         email,
         password,
       });
       if (result.error) {
+        setSignInLoading(false);
         toast.error(result.error);
       } else {
+        setSignInLoading(false);
         router.replace('/profile');
       }
     } else {
@@ -48,7 +52,7 @@ function useAuthForm() {
   return {
     email,
     password,
-    isLoading,
+    isLoading: isLoading || signInLoading,
     setEmail,
     setPassword,
     handleSubmit,
